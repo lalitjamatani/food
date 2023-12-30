@@ -114,6 +114,14 @@ class UserController extends Controller
         }
 
         $user = User::find($id);
+        $fileName = '';
+        if ($request->hasFile('pic')) {
+            $destinationPath = public_path() . '/user/profile_picture/';
+            $file = $request->document;
+            $fileName = time() . '.' . $file->extension();
+            $file->move($destinationPath, $fileName);
+            $input['pic'] = $fileName;
+        }
         $user->update($input);
         DB::table('model_has_roles')->where('model_id', $id)->delete();
 
