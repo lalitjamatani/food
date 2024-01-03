@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,17 +17,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('register', 'Api\AuthenticationController@register')->name('register');
-Route::post('login', 'Api\AuthenticationController@login')->name('login');
-Route::post('forgot_password', 'Api\AuthenticationController@forgot_password')->name('forgot_password');
-Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']);
+Auth::routes();
+
+Route::post('register', [RegisterController::class, 'register'])->name('register');
+Route::post('login', [RegisterController::class, 'login'])->name('login');
+Route::post('logout', [RegisterController::class, 'logout'])->name('logout');
+// Route::post('forgot_password', 'Auth\RegisterController@forgot_password')->name('forgot_password');
+// Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']);
 
 // protected route
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('logout', 'Api\AuthenticationController@logout');
-    Route::any('/get_user', [UserController::class, 'get_user']);
-    Route::any('/change_password', [UserController::class, 'change_password']);
-    Route::any('/update_profile', [UserController::class, 'update_profile']);
+    Route::any('/get_user', [UserController::class, 'show']);
+    Route::any('/update_profile', [UserController::class, 'update']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
