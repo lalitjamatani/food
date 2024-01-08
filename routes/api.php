@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RegisterController;
+use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,8 +23,9 @@ Auth::routes();
 
 Route::post('register', [RegisterController::class, 'register'])->name('register');
 Route::post('login', [RegisterController::class, 'login'])->name('login');
-// Route::post('forgot_password', 'Auth\RegisterController@forgot_password')->name('forgot_password');
-// Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']);
+Route::any('/send_pass_email', [PasswordResetController::class, 'send_reset_pass_email']);
+Route::any('/reset/{token}', [PasswordResetController::class, 'reset_pass']);
+Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']);
 
 // protected route
 Route::middleware(['auth:sanctum'])->group(function () {
