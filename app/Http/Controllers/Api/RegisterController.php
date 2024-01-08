@@ -117,8 +117,12 @@ class RegisterController extends Controller
         }
     }
 
-    public function logout(){
-        Auth::logout();
+    public function logout(Request $request){
+        $user = Auth::guard('sanctum')->user();
+        if(!empty($user)){
+            $user->tokens()->delete();
+        }
+        // Auth::logout();
         return response([
             'message' => 'Logout Successfully.',
             'status' => 'success',

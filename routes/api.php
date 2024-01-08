@@ -21,16 +21,16 @@ Auth::routes();
 
 Route::post('register', [RegisterController::class, 'register'])->name('register');
 Route::post('login', [RegisterController::class, 'login'])->name('login');
-Route::post('logout', [RegisterController::class, 'logout'])->name('logout');
 // Route::post('forgot_password', 'Auth\RegisterController@forgot_password')->name('forgot_password');
 // Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']);
 
 // protected route
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('logout', [RegisterController::class, 'logout'])->name('logout');
     Route::any('/get_user', [UserController::class, 'show']);
     Route::any('/update_profile', [UserController::class, 'update']);
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

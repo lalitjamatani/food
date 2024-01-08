@@ -69,9 +69,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id): View
+    public function show($id = '')
     {
-        $user = User::find($id);
+        if($id == ''){
+            $user = auth()->user();
+        }else{
+            $user = User::find($id);
+        }
+        return response([
+            'success' => 200,
+            'message' => 'User Details Retrieved Successfully',
+            'user' => $user
+        ]);
         return view('users.show', compact('user'));
     }
 
