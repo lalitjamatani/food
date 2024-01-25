@@ -89,7 +89,7 @@ class RegisterController extends Controller
                 ]);
                 // throw new \Exception("These credentials do not match our records.");
             }
-            if (!empty($request->role) && $request->role == '1' && $user->hasRole('users')) {
+            if ($user->hasRole('users')) {
                 $token = $user->createToken($request->email)->plainTextToken;
                 return response([
                     'token' => $token,
@@ -98,7 +98,7 @@ class RegisterController extends Controller
                     'user' => $user
                 ]);
                 // return redirect()->intended('home');
-            } elseif (empty($request->role) && $request->role == '0' && $user->hasRole('admin')) {
+            } elseif ($user->hasRole('admin')) {
                 $token = $user->createToken($request->email)->plainTextToken;
                 return response([
                     'token' => $token,
