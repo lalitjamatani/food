@@ -4,15 +4,22 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 
-class FoodController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $users = User::with('roles')->get();
+
+        return response([
+            'message' => 'Users Details Retrieved Successfully',
+            'status' => '200',
+            'users' => $users
+        ]);
     }
 
     /**

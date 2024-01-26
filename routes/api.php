@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Api\UserController as UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [RegisterController::class, 'logout'])->name('logout');
     Route::any('/get_user', [UserController::class, 'show']);
     Route::any('/update_profile', [UserController::class, 'update']);
+    Route::any('/get_user_list', [UsersController::class, 'index']);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
