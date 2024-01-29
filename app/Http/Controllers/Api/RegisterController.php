@@ -32,12 +32,7 @@ class RegisterController extends Controller
             die;
         } else {
             $data = $request->all();
-            $user = User::create([
-                'first_name' => $data['first_name'],
-                'last_name' => $data['last_name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-            ]);
+            $user = User::create($data);
 
             if (!empty($data['role']) && $data['role'] == '1') {
                 $role = Role::where('name', 'users')->first();
@@ -59,11 +54,13 @@ class RegisterController extends Controller
 
             $token = $user->createToken($request->email)->plainTextToken;
 
+            $retrn_user = User::with('roles')->where('email', $data['email'])->first();
+
             return response([
                 'token' => $token,
                 'message' => 'User Registered Successfully',
                 'status' => '200',
-                'user' => $user
+                'user' => $retrn_user
             ]);
         }
     }

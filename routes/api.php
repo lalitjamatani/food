@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Api\FoodController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
 /*
@@ -34,6 +35,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::any('/get_user', [UserController::class, 'show']);
     Route::any('/update_profile', [UserController::class, 'update']);
     Route::any('/get_user_list', [UsersController::class, 'index']);
+    Route::any('/get_food_request_list', [FoodController::class, 'get_food_request_list']);
+    Route::any('/create_food_request', [FoodController::class, 'create']);
+    Route::any('/edit_food_request/{id}', [FoodController::class, 'edit']);
+    Route::any('/delete_food_request/{id}', [FoodController::class, 'destroy']);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

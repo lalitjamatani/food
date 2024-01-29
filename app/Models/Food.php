@@ -9,7 +9,9 @@ class Food extends Model
 {
     use HasFactory;
 
+    protected $table = "foods";
+
     function user(){
-        $this->belongsTo('App\Models\User', 'user_id', 'id');
+       return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 }
