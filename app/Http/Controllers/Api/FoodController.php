@@ -36,6 +36,25 @@ class FoodController extends Controller
         ]);
     }
 
+    public function create_donate_food(Request $request){
+        $input_data = $request->all();
+        $food = new Food;
+        $food->user_id = $request->user_id;
+        $food->title = $request->title;
+        $food->type = $request->type;
+        $food->text = $request->text;
+        $food->quantity = $request->quantity;
+        $food->location = $request->location;
+        $food->expired = 0;
+        $food->save();
+
+        return response([
+            'status' => 200,
+            'message' => 'Food Donnate Added Sucessfully',
+            'data' => $food,
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -73,6 +92,31 @@ class FoodController extends Controller
     public function show(string $id)
     {
         //
+    }
+
+    public function update_donate_food(Request $request){
+        $input_data = $request->all();
+        $food = Food::find($id);
+        if(empty($food)){
+            return response([
+                'status' => 400,
+                'message' => 'Donation Not Found',
+            ]);
+        }
+        $food->user_id = $request->user_id;
+        $food->title = $request->title;
+        $food->type = $request->type;
+        $food->text = $request->text;
+        $food->quantity = $request->quantity;
+        $food->location = $request->location;
+        $food->expired = 0;
+        $food->save();
+
+        return response([
+            'status' => 200,
+            'message' => 'Food Donnate Added Sucessfully',
+            'data' => $food,
+        ]);
     }
 
     /**
@@ -120,15 +164,20 @@ class FoodController extends Controller
         $food = Food::find($id);
         if(!empty($food)){
             $food->delete();
+            if($food->type == 'donate'){
+                $message = 'Food Donation Deleted Successfully';
+            }else{
+                $message = 'Food Request Deleted Successfully';
+            }
             return response([
                 'status' => 200,
-                'message' => 'Food Request Deleted Sucessfully',
+                'message' => $message,
                 'data' => $food,
             ]);
         }else{
             return response([
                 'status' => 400,
-                'message' => 'Request Not Found',
+                'message' => 'Record Not Found',
             ]);
         }
     }

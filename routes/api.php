@@ -39,6 +39,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::any('/create_food_request', [FoodController::class, 'create']);
     Route::any('/edit_food_request/{id}', [FoodController::class, 'edit']);
     Route::any('/delete_food_request/{id}', [FoodController::class, 'destroy']);
+
+    Route::any('/get_food_donate_list', [FoodController::class, 'get_food_donate_list']);
+    Route::any('/create_donate_food', [FoodController::class, 'create_donate_food']);
+    Route::any('/update_donate_food/{id}', [FoodController::class, 'update_donate_food']);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

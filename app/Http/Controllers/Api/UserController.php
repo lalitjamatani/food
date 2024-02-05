@@ -22,6 +22,30 @@ class UserController extends Controller
         ]);
     }
 
+    public function update_profile(Request $request)
+    {
+        $users = User::find($request->user_id);
+        if(empty($users)){
+            return response([
+                'status' => '400',
+                'message' => 'User Not Found',
+            ]);
+        }
+
+        $users->first_name = $request->first_name;
+        $users->last_name = $request->last_name;
+        $users->dob = date('Y-m-d', strtotime($request->dob));
+        $users->contact_no = $request->contact_no;
+        $users->gender = $request->gender;
+        $users->save();
+
+        return response([
+            'status' => '200',
+            'message' => 'User Updated Successfully',
+            'user' => $users
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
