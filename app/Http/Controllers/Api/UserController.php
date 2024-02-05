@@ -32,6 +32,12 @@ class UserController extends Controller
             ]);
         }
 
+        $file = $request->file('file');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $filePath = public_path('uploads/users/'); // 'uploads' is the directory inside the public path
+
+        $file->move($filePath, $fileName);
+
         $users->first_name = $request->first_name;
         $users->last_name = $request->last_name;
         $users->dob = date('Y-m-d', strtotime($request->dob));
@@ -67,7 +73,19 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::with('roles')->find($id);
+        if(empty($user)){
+            return response([
+                'status' => '400',
+                'message' => 'Record Not Fouund',
+            ]);
+        }else{
+            return response([
+                'status' => '200',
+                'message' => 'User Retrived Successfully.',
+                'user' => $user
+            ]);
+        }
     }
 
     /**

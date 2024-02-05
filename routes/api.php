@@ -33,7 +33,8 @@ Route::post('/reset-password/{token}', [PasswordResetController::class, 'reset']
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [RegisterController::class, 'logout'])->name('logout');
     Route::any('/get_user', [UserController::class, 'show']);
-    Route::any('/update_profile', [UserController::class, 'update']);
+    Route::any('/update_user/{id}', [UserController::class, 'update']);
+    Route::any('/update_profile', [UserController::class, 'update_profile']);
     Route::any('/get_user_list', [UsersController::class, 'index']);
     Route::any('/get_food_request_list', [FoodController::class, 'get_food_request_list']);
     Route::any('/create_food_request', [FoodController::class, 'create']);

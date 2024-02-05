@@ -109,10 +109,11 @@ class UserController extends Controller
     public function update(Request $request, $id): RedirectResponse
     {
         $this->validate($request, [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'same:confirm-password',
-            'roles' => 'required'
+            // 'roles' => 'required'
         ]);
 
         $input = $request->all();
@@ -126,15 +127,15 @@ class UserController extends Controller
         $fileName = '';
         if ($request->hasFile('pic')) {
             $destinationPath = public_path() . '/user/profile_picture/';
-            $file = $request->document;
+            $file = $request->pic;
             $fileName = time() . '.' . $file->extension();
             $file->move($destinationPath, $fileName);
             $input['pic'] = $fileName;
         }
         $user->update($input);
-        DB::table('model_has_roles')->where('model_id', $id)->delete();
+        // DB::table('model_has_roles')->where('model_id', $id)->delete();
 
-        $user->assignRole($request->input('roles'));
+        // $user->assignRole($request->input('roles'));
 
         return redirect()->route('users.index')
         ->with('success', 'User updated successfully');

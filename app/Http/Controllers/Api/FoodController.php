@@ -91,7 +91,19 @@ class FoodController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $food = Food::with('user')->find($id);
+        if(empty($food)){
+            return response([
+                'status' => '400',
+                'message' => 'Record Not Fouund',
+            ]);
+        }else{
+            return response([
+                'status' => '200',
+                'message' => 'Food Record Retrived Successfully.',
+                'food' => $food
+            ]);
+        }
     }
 
     public function update_donate_food(Request $request){
