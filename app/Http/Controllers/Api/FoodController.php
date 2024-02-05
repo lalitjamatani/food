@@ -26,6 +26,16 @@ class FoodController extends Controller
         ]);
     }
 
+    public function get_food_donate_list(){
+        $foods = Food::with('user')->where('type', 'donate')->where('expired', '!=', 1)->get();
+
+        return response([
+            'status' => 200,
+            'message' => 'Data Retrieved Successfully',
+            'data' => $foods
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -54,7 +64,7 @@ class FoodController extends Controller
      */
     public function store(Request $request)
     {
-        // 
+        //
     }
 
     /**
