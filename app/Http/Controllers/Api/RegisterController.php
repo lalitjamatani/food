@@ -32,6 +32,9 @@ class RegisterController extends Controller
             die;
         } else {
             $data = $request->all();
+            if(!empty($data['password'])){
+                $data['password'] = Hash::make($data['password']);
+            }
             $user = User::create($data);
 
             if (!empty($data['role']) && $data['role'] == '1') {

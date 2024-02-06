@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Food;
 
 class UserController extends Controller
 {
@@ -110,5 +111,51 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function user_dashboard($id, Request $request){
+        $user = User::find($id);
+        if(empty($user)){
+            return response([
+                'status' => '400',
+                'message' => 'User Not Found.',
+            ]);
+        }
+        $food_request_count = Food::where('user_id', $id)->where('type', 'request')->count();
+        $food_donate_count = Food::where('user_id', $id)->where('type', 'donate')->count();
+        $food_accepted_count = Food::where('user_id', $id)->where('accept_id', '!=', null)->count();
+        $food_records = Food::where('user_id', $id)->take(3)->get();
+
+        $data = [];
+        $data['user'] = $user;
+        $data['food_request_count'] = $food_request_count;
+        $data['food_donate_count'] = $food_donate_count;
+        $data['food_accepted_count'] = $food_accepted_count;
+        $data['food_records'] = $food_records;
+
+        return response([
+            'status' => '200',
+            'message' => 'Data Retrived Successfully.',
+            'data' => $data
+        ]);
+    }
+
+    public function admin_dashboard(Request $request){
+        $food_request_count = Food::where('type', 'request')->count();
+        $food_donate_count = Food::where('type', 'donate')->count();
+        $food_accepted_count = Food::where('accept_id', '!=', null)->count();
+        $food_records = Food::limit('3');
+
+        $data = [];
+        $data['food_request_count'] = $food_request_count;
+        $data['food_donate_count'] = $food_donate_count;
+        $data['food_accepted_count'] = $food_accepted_count;
+        $data['food_records'] = $food_records;
+
+        return response([
+            'status' => '200',
+            'message' => 'Data Retrived Successfully.',
+            'data' => $data
+        ]);
     }
 }

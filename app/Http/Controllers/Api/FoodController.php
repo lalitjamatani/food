@@ -17,7 +17,7 @@ class FoodController extends Controller
     }
 
     public function get_food_request_list(){
-        $foods = Food::with('user')->where('type', 'request')->where('expired', '!=', '1')->get();
+        $foods = Food::with('user')->where('type', 'request')->where('accept_id', null)->where('expired', '!=', '1')->get();
 
         return response([
             'status' => 200,
@@ -27,7 +27,7 @@ class FoodController extends Controller
     }
 
     public function get_food_donate_list(){
-        $foods = Food::with('user')->where('type', 'donate')->where('expired', '!=', 1)->get();
+        $foods = Food::with('user')->where('type', 'donate')->where('accept_id', null)->where('expired', '!=', 1)->get();
 
         return response([
             'status' => 200,
@@ -192,5 +192,23 @@ class FoodController extends Controller
                 'message' => 'Record Not Found',
             ]);
         }
+    }
+
+    public function accept_food_request(Request $request){
+        $food = Food::find($request->food_id);
+        if(empty($food)){
+            return response([
+                'status' => '400',
+                'message' => 'Request Not Found'
+            ]);
+        }
+
+        $food->accept_id = $request->user_id;
+        $food->save();
+
+        return response([
+            'status' => '200',
+            'message' => 'Request Accepted Suucessfully',
+        ]);
     }
 }
