@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Food;
+use DB;
 
 class FoodController extends Controller
 {
@@ -18,6 +19,12 @@ class FoodController extends Controller
 
     public function get_food_request_list(){
         $foods = Food::with('user')->where('type', 'request')->where('accept_id', null)->where('expired', '!=', '1')->get();
+        $foods = Food::select('foods.type', 'foods.title', 'foods.text', 'foods.quantity', 'foods.location', 'foods.expired', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"), DB::raw("CONCAT(acceptors.first_name, ' ', acceptors.last_name) AS accept_name"))
+            ->leftJoin('users', 'foods.user_id', '=', 'users.id')
+            ->leftJoin('users as acceptors', 'foods.accept_id', '=', 'acceptors.id')
+            ->where('type', 'request')
+            ->get();
+
 
         return response([
             'status' => 200,
@@ -28,6 +35,11 @@ class FoodController extends Controller
 
     public function get_food_donate_list(){
         $foods = Food::with('user')->where('type', 'donate')->where('accept_id', null)->where('expired', '!=', 1)->get();
+        $foods = Food::select('foods.type', 'foods.title', 'foods.text', 'foods.quantity', 'foods.location', 'foods.expired', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"), DB::raw("CONCAT(acceptors.first_name, ' ', acceptors.last_name) AS accept_name"))
+            ->leftJoin('users', 'foods.user_id', '=', 'users.id')
+            ->leftJoin('users as acceptors', 'foods.accept_id', '=', 'acceptors.id')
+            ->where('type', 'donate')
+            ->get();
 
         return response([
             'status' => 200,
