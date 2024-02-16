@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::any('/get_food_donate_list', [FoodController::class, 'get_food_donate_list']);
     Route::any('/get_food_history', [FoodController::class, 'get_food_history']);
-    Route::any('/create_donate_food', [FoodController::class, 'create_donate_food']);
+    Route::any('/create_edit_food', [FoodController::class, 'create_edit_food']);
     Route::any('/update_donate_food/{id}', [FoodController::class, 'update_donate_food']);
     Route::any('/accept_food_request', [FoodController::class, 'accept_food_request']);
     Route::any('/donee_found/{id}', [FoodController::class, 'donee_found']);

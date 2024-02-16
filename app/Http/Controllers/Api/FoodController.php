@@ -60,9 +60,20 @@ class FoodController extends Controller
         ]);
     }
 
-    public function create_donate_food(Request $request){
+    public function create_edit_food(Request $request){
         $input_data = $request->all();
-        $food = new Food;
+        if(!empty($input_data['id'])){
+            $id = $input_data['id'];
+            $food = Food::find($id);
+            if(empty($food)){
+                return response([
+                    'status' => '400',
+                    'message' => 'Record Not Fouund',
+                ]);
+            }
+        }else{
+            $food = new Food;
+        }
         $food->user_id = $request->user_id;
         $food->title = $request->title;
         $food->type = $request->type;
@@ -72,9 +83,15 @@ class FoodController extends Controller
         $food->expired = 0;
         $food->save();
 
+        if($request->type == 'donate'){
+            $message = 'Food Donate Added Sucessfully';
+        }else{
+            $message = 'Food Request Added Sucessfully';
+        }
+
         return response([
             'status' => 200,
-            'message' => 'Food Donnate Added Sucessfully',
+            'message' => $message,
             'data' => $food,
         ]);
     }
