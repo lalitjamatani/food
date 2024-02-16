@@ -47,6 +47,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::any('/update_donate_food/{id}', [FoodController::class, 'update_donate_food']);
     Route::any('/accept_food_request', [FoodController::class, 'accept_food_request']);
     Route::any('/donee_found/{id}', [FoodController::class, 'donee_found']);
+    Route::any('/show_food/{id}', [FoodController::class, 'show']);
 
     Route::any('/user_dashboard/{id}', [UsersController::class, 'user_dashboard']);
     Route::any('/admin_dashboard', [UsersController::class, 'admin_dashboard']);
