@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Food;
 use DB;
 
@@ -18,7 +19,6 @@ class FoodController extends Controller
     }
 
     public function get_food_request_list(){
-        $foods = Food::with('user')->where('type', 'request')->where('accept_id', null)->where('expired', '!=', '1')->get();
         $foods = Food::select('foods.type', 'foods.title', 'foods.text', 'foods.quantity', 'foods.location', 'foods.expired', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"), DB::raw("CONCAT(acceptors.first_name, ' ', acceptors.last_name) AS accept_name"))
             ->leftJoin('users', 'foods.user_id', '=', 'users.id')
             ->leftJoin('users as acceptors', 'foods.accept_id', '=', 'acceptors.id')
@@ -34,11 +34,23 @@ class FoodController extends Controller
     }
 
     public function get_food_donate_list(){
-        $foods = Food::with('user')->where('type', 'donate')->where('accept_id', null)->where('expired', '!=', 1)->get();
         $foods = Food::select('foods.type', 'foods.title', 'foods.text', 'foods.quantity', 'foods.location', 'foods.expired', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"), DB::raw("CONCAT(acceptors.first_name, ' ', acceptors.last_name) AS accept_name"))
             ->leftJoin('users', 'foods.user_id', '=', 'users.id')
             ->leftJoin('users as acceptors', 'foods.accept_id', '=', 'acceptors.id')
             ->where('type', 'donate')
+            ->get();
+
+        return response([
+            'status' => 200,
+            'message' => 'Data Retrieved Successfully',
+            'data' => $foods
+        ]);
+    }
+
+    public function get_food_history(){
+        $foods = Food::select('foods.type', 'foods.title', 'foods.text', 'foods.quantity', 'foods.location', 'foods.expired', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"), DB::raw("CONCAT(acceptors.first_name, ' ', acceptors.last_name) AS accept_name"))
+            ->leftJoin('users', 'foods.user_id', '=', 'users.id')
+            ->leftJoin('users as acceptors', 'foods.accept_id', '=', 'acceptors.id')
             ->get();
 
         return response([
@@ -222,5 +234,21 @@ class FoodController extends Controller
             'status' => '200',
             'message' => 'Request Accepted Suucessfully',
         ]);
+    }
+
+    public function donee_found(string $id){
+        $user = User::with('roles')->find($id);
+        if(empty($user)){
+            return response([
+                'status' => '400',
+                'message' => 'Record Not Fouund',
+            ]);
+        }else{
+            return response([
+                'status' => '200',
+                'message' => 'Donee Retrived Successfully.',
+                'user' => $user
+            ]);
+        }
     }
 }
