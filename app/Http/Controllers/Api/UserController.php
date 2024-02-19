@@ -15,6 +15,13 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('roles')->get();
+        
+        if(!empty($users)){
+            foreach($users as $user){
+                $image_url = url('user/profile_picture/'.$user->pic);
+                $user->image_url = $image_url;
+            }
+        }
 
         return response([
             'message' => 'Users Details Retrieved Successfully',
@@ -33,11 +40,20 @@ class UserController extends Controller
             ]);
         }
 
-        $file = $request->file('file');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $filePath = public_path('uploads/users/'); // 'uploads' is the directory inside the public path
+        // $file = $request->file('file');
+        // $fileName = time() . '_' . $file->getClientOriginalName();
+        // $filePath = public_path('uploads/users/'); // 'uploads' is the directory inside the public path
 
-        $file->move($filePath, $fileName);
+        // $file->move($filePath, $fileName);
+
+        $fileName = '';
+        if ($request->hasFile('pic')) {
+            $destinationPath = public_path() . '/user/profile_picture/';
+            $file = $request->pic;
+            $fileName = time() . '.' . $file->extension();
+            $file->move($destinationPath, $fileName);
+            $users->pic = $fileName;
+        }
 
         $users->first_name = $request->first_name;
         $users->last_name = $request->last_name;
@@ -75,6 +91,8 @@ class UserController extends Controller
     public function show(string $id)
     {
         $user = User::with('roles')->find($id);
+        $image_url = url('user/profile_picture/'.$user->pic);
+        $user->image_url = $image_url;
         if(empty($user)){
             return response([
                 'status' => '400',
@@ -115,6 +133,8 @@ class UserController extends Controller
 
     public function user_dashboard($id, Request $request){
         $user = User::find($id);
+        $image_url = url('user/profile_picture/'.$user->pic);
+        $user->image_url = $image_url;
         if(empty($user)){
             return response([
                 'status' => '400',
